@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html charset="UTF-8">
+  <head>
+    <meta name="viewport">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.11.0/bootstrap-table.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/superhero/bootstrap.min.css" rel="stylesheet" title="main">
+    <title>AirPatrol: Can I Breathe?</title>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <h1>AirPatrol </h1>
+      <ul class="nav nav-tabs" id="tab">
+        <li class="active"><a href="#tab_mesures" data-toggle="tab">Monitor</a></li>
+        <li><a href="#tab_graphs" data-toggle="tab">Patrol Station</a></li>
+        <li><a href="#tab_gpio" data-toggle="tab">Drone Control</a></li>
+        <li><a href="#tab_configuration" data-toggle="tab">Configuration</a></li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane fade in active" id="tab_mesures">        
+          <h2>Houston, TX</h2>
+          <ul class="nav nav-pills">
+            <li class="active"><a href="#">
+                <div class="span badge pull-right" id="temperature">-</div>Temperature</a></li>
+            <li><a href="#">
+                <div class="span badge pull-right" id="humidite">-</div>CO2</a></li>
+            <li><a href="#">
+                <div class="span badge pull-right" id="pa">-</div>TVOC</a></li>
+          </ul><br>
+          <table id="table_mesures" data-toggle="table" data-show-colunns="true">
+            <thead>
+              <tr>
+                <th data-field="mesure" data-align="left" data-sortable="true" data-formatter="labelFormatter">Measure</th>
+                <th data-field="valeur" data-align="left" data-sortable="true" data-formatter="valueFormatter">Value</th>
+                <th data-field="precedente" data-align="left" data-sortable="true" data-formatter="vpFormatter">Previous Value</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+        <div class="tab-pane fade" id="tab_graphs">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <div class="row panel-title"> 
+                <div class="col-xs-4 col-md-4">
+                  <div id="labelTemp"></div>
+                </div>
+                <div class="col-xs-4 col-md-4">
+                  <div id="labelHumi"></div>
+                </div>
+                <div class="col-xs-4 col-md-4">
+                  <div id="labelPa"></div>
+                </div>
+              </div>
+            </div>
+            <div class="panel body">
+              <div class="row">
+                <div class="col-xs-6 col-md-6">
+                  <div class="div" id="chartCO2" style="width: 100%; height: 300px; margin-left: 25%;"></div>
+                </div>
+                <div class="col-xs-6 col-md-6">
+                  <div class="div" id="chartTVOC" style="width: 100%; height: 300px; margin-left: 25%;"></div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-6 col-md-6">
+                  <div class="div" id="chartTemp" style="width: 100%; height: 300px;"></div>
+                </div>
+                <div class="col-xs-6 col-md-6">
+                  <div class="div" id="chartCompound" style="width: 100%; height: 300px;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="tab_gpio">
+          <h2>LED Indicators</h2>
+          <div class="row">
+            <div class="col-xs-4 col-md-4">
+              <h4 class="text-left"> Cloak
+                <div class="span badge" id="Off_state">ON</div>
+              </h4>
+            </div>
+            <div class="col-xs-4 col-md-4">
+              <div class="button btn btn-danger btn-lg" id="Off_On" type="button">ON</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-4 col-md-4">
+              <h4 class="text-left">Rainbow
+                <div class="span badge" id="Rainbow_state">OFF</div>
+              </h4>
+            </div>
+            <div class="col-xs-4 col-md-4">
+              <div class="button btn btn-success btn-lg" id="Rainbow_On" type="button">ON</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-4 col-md-4">
+              <h4 class="text-left">Berry
+                <div class="span badge" id="Berry_state">OFF</div>
+              </h4>
+            </div>
+            <div class="col-xs-4 col-md-4">
+              <div class="button btn btn-success btn-lg" id="Berry_On" type="button">ON</div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-4 col-md-4">
+              <h4 class="text-left">Mermaid
+                <div class="span badge" id="Mermaid_state">OFF</div>
+              </h4>
+            </div>
+            <div class="col-xs-4 col-md-4">
+              <div class="button btn btn-success btn-lg" id="Mermaid_On" type="button">ON</div>
+            </div>
+          </div>     
+          <div class="row">
+            <div class="col-xs-4 col-md-4">
+              <h4 class="text-left">Tropical
+                <div class="span badge" id="Tropical_state">OFF</div>
+              </h4>
+            </div>
+            <div class="col-xs-4 col-md-4">
+              <div class="button btn btn-success btn-lg" id="Tropical_On" type="button">ON</div>
+            </div>
+          </div> 
+        </div>
+
+
+        <div class="tab-pane fade" id="tab_configuration">
+          <h2>Configuration        </h2>
+          <div class="btn-group">
+            <button class="btn btn-default" id="labelTheme">Theme</button>
+            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+            <ul class="dropdown-menu">
+              <li><a class="change-style-menu-item" href="#" rel="bootstrap">Boostrap</a></li>
+              <li><a class="change-style-menu-item" href="#" rel="cerulean">Cerulean</a></li>
+              <li><a class="change-style-menu-item" href="#" rel="cosmo">Cosmo</a></li>
+              <li><a class="change-style-menu-item" href="#" rel="cyborg">Cyborg</a></li>
+              <li><a class="change-style-menu-item" href="#" rel="darkly">Darkly</a></li>
+              <li><a class="change-style-menu-item" href="#" rel="flatly">Flatly</a></li>
+              <li><a class="change-style-menu-item" href="#" rel="journal">Journal</a></li>
+              <li><a class="change-style-menu-item" href="#" rel="lumen">Lumen</a></li>
+              <li><a class="change-style-menu-item" href="#" rel="paper">Paper</a></li>
+              <li><a class="change-style-menu-item" href="#" rel="readable">Readable</a></li>
+              <li><a class="change-style-menu-item" href="#" rel="sandstone">Sandstone</a></li>
+              <li><a class="change-style-menu-item" href="#" rel="simplex">Simplex</a></li>
+              <li><a class="change-style-menu-item" href="#" rel="slate">Slate</a></li>
+              <li><a class="change-style-menu-item" href="#" rel="spacelab">Spacelab</a></li>
+              <li><a class="change-style-menu-item" href="#" rel="superhero">Superhero</a></li>
+              <li><a class="change-style-menu-item" href="#" rel="united">United</a></li>
+              <li><a class="change-style-menu-item" href="#" rel="yeti">Yeti  </a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+   <script type="text/javascript">
+   		
+      var tab_pane;
+      var Timer_UpdateMeasures;
+      
+      google.charts.load('current', {'packages':['corechart', 'gauge', 'line']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+          
+        var CO2Gauge = {
+          greenFrom: 0,
+          greenTo: 440,
+
+          yellowFrom: 440,
+          yellowTo: 1030, 
+
+          redFrom: 1030,
+          redTo: 2000, 
+
+          minorTicks: 10,
+
+          min: 0,
+          max: 2000,
+
+          animation: {
+            duration: 400,
+            easing: 'out',
+          },
+        }
+        var TVOCGauge = {
+          greenFrom: 0,
+          greenTo: 200,
+
+          yellowFrom: 200,
+          yellowTo: 1030, 
+
+          redFrom: 1030,
+          redTo: 1080, 
+
+          minorTicks: 10,
+
+          min: 0,
+          max: 1080,
+
+          animation: {
+            duration: 400,
+            easing: 'out',
+          },
+        }
+
+        var TempLine = {
+          title: 'Temperature',
+          legend: {position: 'none'},
+        }
+        
+        var CompoundsLine = {
+          title: 'CO2 and TVOC',
+          legend: 'bottom',
+          series: {
+            0: {axis: 'CO2'},
+            1: {axis: 'TVOC'}
+          },
+          axes: {
+            y: {
+              CO2: {label: 'CO2'},
+              TVOC: {label: 'TVOC'}
+            }
+          }
+        };
+
+				// Charts Objects
+        var chartCO2 = new google.visualization.Gauge(document.getElementById('chartCO2'));
+        var chartTVOC = new google.visualization.Gauge(document.getElementById('chartTVOC'));
+        var chartTemp = new google.visualization.AreaChart(document.getElementById('chartTemp'));
+        var chartCompounds = new google.visualization.AreaChart(document.getElementById('chartCompound'));
+         
+        var CO2Data = new google.visualization.DataTable();
+          CO2Data.addColumn('string', 'Label');
+          CO2Data.addColumn('number', 'Value');
+          CO2Data.addRow(
+            ['CO2', 68]
+            );
+          
+        var TVOCData = new google.visualization.DataTable();
+          TVOCData.addColumn('string', 'Label');
+          TVOCData.addColumn('number', 'Value');
+          TVOCData.addRow(
+            ['TVOC', 68]
+            ); 
+          
+				var TempData = new google.visualization.DataTable();
+          TempData.addColumn('number', 'Time');
+          TempData.addColumn('number', 'Temperature');
+/*           TempData.addRows([
+            [1,  37.8],
+            [2,  30.9],
+            [3,  25.4],
+            [4,  11.7],
+            [5,  11.9],
+            [6,   8.8],
+            [7,   7.6],
+            [8,  12.3],
+            [9,  16.9],
+            [10, 12.8],
+            [11,  5.3],
+            [12,  6.6],
+            [13,  4.8],
+            [14,  4.2]
+          ]); */
+        
+        var CompoundData = new google.visualization.DataTable();
+          CompoundData.addColumn('number', 'Time');
+          CompoundData.addColumn('number', 'CO2');
+          CompoundData.addColumn('number', 'TVOC');
+/*           CompoundData.addRows([
+            [1, 80.8, 41.8],
+            [2, 69.5, 32.4],
+            [3, 57, 25.7],
+            [4, 18.8, 10.5],
+            [5, 17.6, 10.4],
+            [6, 13.6,  7.7],
+            [7, 12.3,  9.6],
+            [8, 29.2, 10.6],
+            [9, 42.9, 14.8],
+            [10, 30.9, 11.6],
+            [11, 7.9,  4.7],
+            [12, 8.4,  5.2],
+            [13, 6.3,  3.6],
+            [14, 6.2,  3.4]
+          ]);  */
+
+
+        var firstStart = true;
+        updateGraphs();
+        // Actualise à intervalle régulier les graphiques - auto-update charts 
+        setInterval(updateGraphs, 1000); //60000 MS == 1 minutes
+         
+        function updateGraphs(){     
+          // Uniquement si le panneau des graphs est actif - only if chart panel is active
+
+          if (tab_pane=='#tab_graphs' | firstStart ){
+            firstStart = false;
+            
+            $.getJSON('/chart.json', function(json){
+              //console.log("Mesures envoyees : " + JSON.stringify(data) + "|" + data.t + "|" + data.h + "|" + data.pa) ;		
+              
+              var _dataCO2 = [];
+              var _dataTVOC = [];
+              var _dataTemp = [];
+              var _dataCompound = [];
+
+              // Process JSON
+              for( var i=0; i<json.timestamp.length; i++ ){
+                var d = new Date(json.timestamp[i] * 1000);
+                _dataTemp.push(
+                  [
+                    d.getSeconds(),
+                    json.temp[i]
+                  ]
+                )
+                _dataCO2.push(
+                  [
+                    d.getSeconds(),
+                    json.eCO2[i]
+                  ]
+                )
+                _dataTVOC.push(
+                  [
+                    d.getSeconds(),
+                    json.TVOC[i]
+                  ]
+                )
+                _dataCompound.push(
+                  [
+                    d.getSeconds(),
+                    json.eCO2[i],
+                    json.TVOC[i]
+                  ]
+                )
+              }
+
+							// Refresh Values
+              CO2Data.setValue(0, 1, json.eCO2[0]);
+              TVOCData.setValue(0, 1, json.TVOC[0]);
+              TempData.addRows(_dataTemp);
+              CompoundData.addRows(_dataCompound);
+              
+              // Erase old data
+              var nbRec = TempData.getNumberOfRows() - json.timestamp.length;
+              if ( TempData.getNumberOfRows() > json.timestamp.length ){
+                TempData.removeRows(0, nbRec );
+                CompoundData.removeRows(0, nbRec );
+              }
+
+              // Display charts
+              chartCO2.draw(CO2Data, CO2Gauge);
+              chartTVOC.draw(TVOCData, TVOCGauge);
+              chartTemp.draw(TempData, TempLine);
+              chartCompounds.draw(CompoundData, CompoundsLine);
+            }).fail(function(err){
+              console.log("err: Cannot get JSON"+JSON.stringify(err));
+            });
+          }
+        }    
+      
+				
+
+// Draw Charts
+        chartCO2.draw(CO2Data, CO2Gauge);
+        chartTVOC.draw(TVOCData, TVOCGauge);
+        chartTemp.draw(TempData, TempLine);
+        chartCompounds.draw(CompoundData, CompoundsLine);
+        
+
+      }
+      
+      
+       // Monitor ----------------------------------------------------------------------------------
+      $('a[data-toggle=\"tab\"]').on('shown.bs.tab', function (e) {   
+        //On supprime tous les timers lorsqu'on change d'onglet
+        clearTimeout(Timer_UpdateMeasures);  
+        tab_pane = $(e.target).attr("href")  
+        console.log('activated ' + tab_pane );  
+      
+        // IE10, Firefox, Chrome, etc.
+        if (history.pushState) 
+          window.history.pushState(null, null, tab_pane);
+        else 
+          window.location.hash = tab_pane;
+        
+        if (tab_pane=='#tab_mesures')  {
+          $('#table_mesures').bootstrapTable('refresh',{silent:true, url:'/tabmesures.json'}); 
+        }  
+      });
+      
+      // Créé un timer qui actualise les données régulièrement - Create a timer than update data every n secondes
+      $('#tab_mesures').on('load-success.bs.table',function (e,data){
+        console.log("tab_mesures loaded");
+        if ($('.nav-tabs .active > a').attr('href')=='#tab_mesures') {
+          Timer_UpdateMeasures=setTimeout(function(){
+            $('#table_mesures').bootstrapTable('refresh',{silent: true, showLoading: false, url: '/tabmesures.json'});
+            updateMesures();
+          },10000);
+        }                 
+      });   
+          
+      function updateMesures(){
+        $.getJSON('/mesures.json', function(data){
+          //console.log("Mesures envoyees : " + JSON.stringify(data) + "|" + data.t + "|" + data.h + "|" + data.pa) ;
+          $('#temperature').html(data.t);
+          $('#humidite').html(data.h);
+          $('#pa').html(data.pa); 
+        }).fail(function(err){
+          console.log("err getJSON mesures.json "+JSON.stringify(err));
+        });
+      };
+      
+      function labelFormatter(value, row){
+        var label = "";
+        if ( value === "Température" ) {
+          label = value + "<span class='glyphicon " + row.glyph + " pull-left'></span>";
+          $("#labelTemp").html("&nbsp;" + value + "&nbsp;" + "<span class='badge'> " + row.valeur + row.unite + "</span><span class='glyphicon " + row.glyph + " pull-left'></span>");
+        } else if ( value === "Humidité" ) {
+          label = value + "<span class='glyphicon " + row.glyph + " pull-left'></span>";
+          $("#labelHumi").html("&nbsp;" + value + "&nbsp;" + "<span class='badge'> " + row.valeur + row.unite + "</span><span class='glyphicon " + row.glyph + " pull-left'></span>");
+        } else if ( value === "Pression Atmosphérique" ) {
+          label = value + "<span class='glyphicon " + row.glyph + " pull-left'></span>";
+          $("#labelPa").html("&nbsp;" + value + "&nbsp;" + "<span class='badge'> " + row.valeur + row.unite + "</span><span class='glyphicon " + row.glyph + " pull-left'></span>");
+        } else {
+          label = value;
+        } 
+        return label;
+      }
+      function valueFormatter(value, row){
+        //console.log("valueFormatter");
+        var label = "";
+        if ( row.valeur > row.precedente ) {
+          label = value + row.unite + "<span class='glyphicon glyphicon-chevron-up pull-right'></span>";
+        } else { 
+          label = value + row.unite + "<span class='glyphicon glyphicon-chevron-down pull-right'></span>";
+        }
+        return label;
+      }
+      function vpFormatter(value, row){
+        //console.log("valueFormatter");
+        var label = "";
+        if ( row.valeur > row.precedente ) {
+          label = value + row.unite
+        } else { 
+          label = value + row.unite
+        }
+        return label;
+      }  
+      
+      // GPIO change ------------------------------------------------------------------------------------
+      $('#Off_On').click(function(){ setButton('Off', '1'); });
+    //  $('#CO2_Off').click(function(){ setButton('CO2'); });
+      $('#Rainbow_On').click(function(){ setButton('Rainbow','1'); });
+    //  $('#TVOC_Off').click(function(){ setButton('TVOC'); });
+      $('#Berry_On').click(function(){ setButton('Berry', '1'); });
+    //  $('#Temp_Off').click(function(){ setButton('Temp'); });
+      $('#Tropical_On').click(function(){ setButton('Tropical','1'); });
+   //   $('#D8_Off').click(function(){ setButton('D8','0'); });
+      $('#Mermaid_On').click(function(){ setButton('Mermaid','1'); });
+      
+      function setButton(id, state){
+        $.post("gpio?id=" + id + "&state=" +state).done(function(data){
+          //console.log("Retour setBouton " + JSON.stringify(data)); 
+          var id_gpio = "#" + id + "_state";
+          //console.log(data);
+          if ( data.success === "1" | data.success === 1 ) {
+            if ( data.etat === "1" ) {
+              $(id_gpio).html("ON");
+            } else {
+              $(id_gpio).html("OFF");
+            }  
+          } else {
+            $(id_gpio).html('!');
+          }      
+        }).fail(function(err){
+          console.log("err setButton " + JSON.stringify(err));
+        });
+      } 
+      
+      // Change current theme ----------------------------------------------------------------------------
+      var supports_storage = supports_html5_storage();
+      if (supports_storage) {
+        var theme = localStorage.theme;
+        console.log("Recharge le theme " + theme);
+        if (theme) {
+          set_theme(get_themeUrl(theme));
+        }
+      }
+      
+      // New theme selected
+      jQuery(function($){
+        $('body').on('click', '.change-style-menu-item', function() {
+          var theme_name = $(this).attr('rel');
+          console.log("Change theme " + theme_name);
+          var theme_url = get_themeUrl(theme_name);
+          console.log("URL theme : " + theme_url);
+          set_theme(theme_url);
+        });
+      });
+      // Get theme URL
+      function get_themeUrl(theme_name){
+        $('#labelTheme').html("Theme : " + theme_name);
+        var url_theme = "";
+        if ( theme_name === "bootstrap" ) {
+          url_theme = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css";
+        } else {
+          url_theme = "https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/" + theme_name + "/bootstrap.min.css";
+        }
+        if (supports_storage) {
+          //save into the local database the selected theme
+          localStorage.theme = theme_name;
+        }
+        return url_theme;
+      }
+      //Apply theme
+      function set_theme(theme_url) {
+        $('link[title="main"]').attr('href', theme_url);
+      }
+      //local storage available ?
+      function supports_html5_storage(){
+        try {
+          return 'localStorage' in window && window['localStorage'] !== null;
+        } catch (e) {
+          return false;
+        }
+      }
+    </script>
+  </head>
+  </body>
+</html>
